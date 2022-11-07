@@ -6,7 +6,7 @@ export default function Posts(props) {
 
     async function fetchPost() {
         const file = await fetch('http://localhost:8080/posts');
-        const resp = await file.json()ssh-keygen -t ed25519 -C "your_email@example.com"
+        const resp = await file.json()
         console.log(resp);
             //   for (let i = 0; i < resp.length; i++) {
             //     function displayPost() {
