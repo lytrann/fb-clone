@@ -66,9 +66,31 @@ app.get('/posts', (req, res) => {
         console.log(allposts)
 
     }
-
     getdata()
+})
 
+
+app.get('/example_data', (req, res) => {
+    res.send(JSON.stringify([
+        {
+            name: 'Thịt xiên nướng',
+            image: 'skewer.jpeg',
+            description: 'Juicy meat',
+            price: 5000
+        },
+        {
+            name: 'Xúc xích',
+            image: 'hotdog.jpeg',
+            description: 'Juicy meat',
+            price: 3000
+        },
+        {
+            name: 'Thịt chó',
+            image: 'dog.jpg',
+            description: 'Juicy meat',
+            price: 2000
+        }
+    ]))
 })
 
 app.listen(port, () => {
