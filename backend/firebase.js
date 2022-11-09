@@ -27,16 +27,23 @@ admin.initializeApp({
 
 
 const db = getFirestore();
+function makeid(length) {
+    var result = '';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
 
-console.log('1')
+}
 app.use(bodyparser.json())
-console.log('2')
-app.use(cors())
-console.log('3')
-app.use(bodyparser.urlencoded({extended: true}));
-console.log('4')
 
-console.log('5')
+app.use(cors())
+
+app.use(bodyparser.urlencoded({extended: true}));
+
 console.log('firestore initiated')
 
 app.get('/', (req, res) => {
@@ -68,6 +75,23 @@ app.get('/posts', (req, res) => {
     }
     getdata()
 })
+
+app.post('/newpost', (req,res) => {
+     const docRef = db.collection('post').doc(makeid(20));
+
+        async function retrieve() {
+            await docRef.set({
+                'content': req.body.content,
+                'likeno': 0,
+                'cmtno': 0,
+                'shareno': 0
+
+            })
+        }
+
+        retrieve()
+    })
+
 
 
 app.get('/example_data', (req, res) => {

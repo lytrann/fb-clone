@@ -1,13 +1,14 @@
 import {createBrowserRouter} from "react-router-dom";
-import Posts from "./routes/Posts.jsx";
-import {NewPost} from "./routes/NewPost.jsx";
+import Post from "./components/Post.jsx";
+import NewPost from "./routes/NewPost.jsx";
 import Menu from "./example_src/routes/Menu.jsx";
+import Wall from "./routes/Wall.jsx"
 
 
 export default createBrowserRouter([
     {
         path: "/posts",
-        element: <Posts/>,
+        element: <Post/>,
     },
     {
         path: "/newpost",
@@ -16,8 +17,13 @@ export default createBrowserRouter([
     {
         path: "/example",
         element: <Menu/>
+    },
+    {
+        path: "/wall",
+        element: <Wall/>
     }
 ])
+
 
 // export const Router = () => {
 //     return (
