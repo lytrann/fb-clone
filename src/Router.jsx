@@ -20,13 +20,12 @@ export default createBrowserRouter([
         element: <Menu/>
     },
     {
-<<<<<<< HEAD
         path: "/wall",
         element: <Wall/>
-=======
+    },
+    {
         path: "/input",
         element: <InputEg/>
->>>>>>> 96e7094908c741d6b875ec2cc979ffc0edeb5a91
     }
 ])
 
