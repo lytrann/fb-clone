@@ -4,9 +4,15 @@ import NewPost from "./routes/NewPost.jsx";
 import Menu from "./example_src/routes/Menu.jsx";
 import Wall from "./routes/Wall.jsx"
 import InputEg from "./routes/InputEg.jsx";
+import App from "./App.jsx"
 
 
 export default createBrowserRouter([
+
+    {
+        path: "*",
+        element: <App/>,
+    },
     {
         path: "/posts",
         element: <Post/>,

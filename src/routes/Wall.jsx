@@ -5,7 +5,7 @@ import '../App.css'
 import Post from "../components/Post.jsx";
 
 
-export default function Wall() {
+export default function Wall(props) {
 
     useEffect(() => {
         fetchPost()
@@ -16,14 +16,18 @@ export default function Wall() {
     async function fetchPost() {
         const file = await fetch('http://localhost:8080/posts');
         const resp = await file.json()
-        console.log({resp});
+        console.log('allposts', {resp});
         setposts(resp)
+
+
     }
+
+
 
     return (
         <div>
             {posts.map(item =>
-                <Post itemData={item} key={item.id}/>
+                <Post itemData={item} key={item.id} allposts={fetchPost} fetchPost={fetchPost}/>
             )}
 
         </div>

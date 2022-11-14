@@ -1,64 +1,62 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 
 import '../App.css'
+import {containerClasses} from "@mui/material";
+import Container from '@mui/material/Container';
+import {useNavigate} from "react-router-dom";
 
 
 export default function NewPost() {
 
-    useEffect(() => {
 
-    }, [])
+    const [NewPost, setNewPost] = useState('');
+    const navigate = useNavigate()
 
-    const [NewPost, setNewPost] = useState([]);
+    function handleChange(event) {
+        console.log(event.target)
+        setNewPost({content: event.target.value});
+    }
 
-    class NameForm extends React.Component {
-        constructor(props) {
-            super(props);
-            this.state = {value: ''};
+    async function handleSubmit(event) {
 
-            this.handleChange = this.handleChange.bind(this);
-            this.handleSubmit = this.handleSubmit.bind(this);
-        }
+        console.log('handleSubmit')
+        event.preventDefault();
+        const rawResponse = await fetch('http://localhost:8080/newpost', {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(NewPost)
+        })
+        await console.log(rawResponse)
+        const content = await rawResponse.json();
+        console.log('here', content);
+        navigate("/wall");
 
-        handleChange(event) {
-            this.setState({value: event.target.value});
-        }
-
-        handleSubmit(event) {
-            alert('post created');
-            event.preventDefault();
-            // const rawResponse = await fetch('http://localhost:8080/newpost', {
-            //     method: "POST",
-            //     headers: {
-            //         'Accept': 'application/json',
-            //         'Content-Type': 'application/json'
-            //     },
-            //     body: JSON.stringify(info)
-            // })
-            // const content = await rawResponse.json();
-            //
-            // console.log(content);
-        }
 
     }
 
 
     return (
-        <div className="heading">
-            <p className="createpost">Create post </p>
-            <button className="cancel"> X</button>
-        </div>,
+
+        <div className={containerClasses} style={{margin: '10%'}}>
+            <Container className="heading" style={{flexFlow: 'column wrap'}}>
+                <p className="createpost" style={{alignSelf: 'flex-end'}}>Create post </p>
+                <button className="cancel"> X</button>
+            </Container>
+
             <div className="body">
                 <h1 id="username" className="name">Đậu</h1>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={handleSubmit} style={{alignSelf: 'center'}}>
                     <label>
                         <input type="text" placeholder="Write something here" name="createpost" className="input"
-                               id="text"/>
+                               id="text" onChange={handleChange} style={{backgroundColor: 'none'}}/>
                     </label>
                     <input type="submit" value="Submit" className="submit"/>
                 </form>
             </div>
+        </div>
 
     )
-
 }
