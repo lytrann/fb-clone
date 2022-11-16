@@ -56,15 +56,6 @@ export default function Post(props) {
 
         props.fetchPost()
     }
-        //
-        // const removePost = () => {
-        //     setPost(Posts =>
-        //         allposts.filter(Posts => {
-        //             return Posts.id !== content;
-        //         }))
-        //     console.log('updated posts ', removePost)
-        // }}
-
 
         return (
             <Stack spacing={20}>

@@ -17,6 +17,12 @@ export default function App() {
                     <li>
                         <Link to="/wall">See all posts</Link>
                     </li>
+                    <li>
+                        <Link to="/signup">Sign up</Link>
+                    </li>
+                    <li>
+                        <Link to="/login">Log In</Link>
+                    </li>
                 </ul>
             </nav>
             <Routes>

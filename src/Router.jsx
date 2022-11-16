@@ -4,8 +4,9 @@ import NewPost from "./routes/NewPost.jsx";
 import Menu from "./example_src/routes/Menu.jsx";
 import Wall from "./routes/Wall.jsx"
 import InputEg from "./routes/InputEg.jsx";
-import App from "./App.jsx"
-
+import App from "./App.jsx";
+import SignUp from "./routes/SignUp.jsx";
+import LogIn from "./routes/LogIn.jsx";
 
 export default createBrowserRouter([
 
@@ -32,7 +33,15 @@ export default createBrowserRouter([
     {
         path: "/input",
         element: <InputEg/>
-    }
+    },
+    {
+        path: "/signup",
+        element: <SignUp/>
+    },
+    {
+        path: "/login",
+        element: <LogIn/>
+    },
 ])
 
 

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react'
 import '../App.css'
 
 import Post from "../components/Post.jsx";
+import {Link} from "react-router-dom";
 
 
 export default function Wall(props) {
@@ -26,6 +27,7 @@ export default function Wall(props) {
 
     return (
         <div>
+            <Link to="*"> Back to home </Link>
             {posts.map(item =>
                 <Post itemData={item} key={item.id} allposts={fetchPost} fetchPost={fetchPost}/>
             )}

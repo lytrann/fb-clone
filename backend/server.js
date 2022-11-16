@@ -1,6 +1,6 @@
 const port = 8080
 const cors = require('cors')
-const {initializeApp, applicationDefault, cert} = require('firebase-admin/app');
+const {initializeApp, applicationDefault, cert, firebase, database} = require('firebase-admin/app');
 const {getFirestore, Timestamp, FieldValue} = require('firebase-admin/firestore');
 const express = require('express')
 const bodyparser = require('body-parser');
@@ -90,6 +90,84 @@ app.post('/newpost', (req, res) => {
     retrieve()
     res.send(JSON.stringify("post created"))
 })
+app.post('/signup', async (req, res) => {
+
+        const usersRef = db.collection('users')
+        const id = usersRef.doc(makeid(20));
+        const emailRef = await usersRef.where('email', '==', req.body.email).get();
+        const nameRef = await usersRef.where('name', '==', req.body.name).get();
+        if (!emailRef.empty || !nameRef.empty) {
+            console.log(emailRef, nameRef);
+            res.send(JSON.stringify('user already exists, log in? '))
+        } else {
+            id.set({
+                'name': req.body.name,
+                'email': req.body.email,
+                'password': req.body.password
+            })
+                .then(res.send(JSON.stringify('user created')))
+        }
+
+    }
+)
+app.post('/login', async (req, res) => {
+
+        const usersRef = db.collection('users')
+        const nameRef = await usersRef.where('email', '==', req.body.username).get();
+        const emailRef = await usersRef.where('name', '==', req.body.username).get();
+        console.log('request received')
+        if (nameRef.empty && emailRef.empty) {
+            console.log('no user');
+            res.send(JSON.stringify("user does not exist, sign up?"))
+        } else {
+            if (emailRef.empty) {
+                nameRef.forEach(doc => {
+                    const password = doc.get("password")
+                    console.log('password: ', password)
+                    console.log('input: ', req.body.password);
+                    if (password === req.body.password) {
+
+                        console.log(doc.id, ' ',  Timestamp.fromMillis(Date.now()))
+                        const sessionID = makeid(20)
+                        const docRef = db.collection('sessions').doc(sessionID);
+                        docRef.set({
+                            'userID': doc.id,
+                            'created':   Timestamp.fromMillis(Date.now())
+
+                        })
+                        res.send(JSON.stringify("OK"))
+                        document.cookie = `sessionID=${sessionID};path=/wall;`
+                    } else {
+                        res.send(JSON.stringify("wrong password"));
+                    }
+                })
+
+            } else {
+                emailRef.forEach(doc => {
+                    const password = doc.get("password")
+                    console.log('password: ', password)
+                    console.log('input: ', req.body.password)
+                    if (password === req.body.password) {
+                        console.log(doc.id, ' ',  Timestamp.fromMillis(Date.now()))
+                        const sessionID = makeid(20)
+                        const docRef = db.collection('sessions').doc(sessionID);
+                        docRef.set({
+                            'userID': doc.id,
+                            'created':   Timestamp.fromMillis(Date.now())
+
+                        })
+
+                        res.send(JSON.stringify("OK"))
+                    } else {
+                        res.send(JSON.stringify("wrong password"))
+                    }
+                })
+            }
+
+        }
+    }
+)
+
 
 app.post('/updatelike', async (req, res) => {
     console.log('data received: ' + req.body)
@@ -136,7 +214,6 @@ app.get('/example_data', (req, res) => {
         name: 'Thịt chó', image: 'dog.jpg', description: 'Juicy meat', price: 2000
     }]))
 })
-
 
 
 app.listen(port, () => {

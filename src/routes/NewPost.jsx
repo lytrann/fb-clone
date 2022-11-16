@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import '../App.css'
 import {containerClasses} from "@mui/material";
 import Container from '@mui/material/Container';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 
 
 export default function NewPost() {
@@ -42,8 +42,8 @@ export default function NewPost() {
 
         <div className={containerClasses} style={{margin: '10%'}}>
             <Container className="heading" style={{flexFlow: 'column wrap'}}>
-                <p className="createpost" style={{alignSelf: 'flex-end'}}>Create post </p>
-                <button className="cancel"> X</button>
+                <label className="createpost" style={{alignSelf: 'flex-end'}}>Create post </label><br/>
+                     <Link to="*"> Back to home </Link>
             </Container>
 
             <div className="body">
@@ -53,7 +53,7 @@ export default function NewPost() {
                         <input type="text" placeholder="Write something here" name="createpost" className="input"
                                id="text" onChange={handleChange} style={{backgroundColor: 'none'}}/>
                     </label>
-                    <input type="submit" value="Submit" className="submit"/>
+                    <Link to ="/wall"  type="submit" value="Submit" className="submit" onClick={handleSubmit}>Submit</Link>
                 </form>
             </div>
         </div>
