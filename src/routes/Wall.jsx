@@ -12,13 +12,13 @@ export default function Wall(props) {
         fetchPost()
     }, [])
 
-    const [posts, setposts] = useState([])
+    const [Posts, setPosts] = useState([])
 
     async function fetchPost() {
         const file = await fetch('http://localhost:8080/posts');
         const resp = await file.json()
-        console.log('allposts', {resp});
-        setposts(resp)
+        console.log('Loaded all posts');
+        setPosts(resp)
 
 
     }
@@ -28,8 +28,8 @@ export default function Wall(props) {
     return (
         <div>
             <Link to="*"> Back to home </Link>
-            {posts.map(item =>
-                <Post itemData={item} key={item.id} allposts={fetchPost} fetchPost={fetchPost}/>
+            {Posts.map(item =>
+                <Post itemData={item} key={item.id} allPosts={fetchPost} fetchPost={fetchPost}/>
             )}
 
         </div>

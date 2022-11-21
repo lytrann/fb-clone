@@ -1,9 +1,10 @@
 const port = 8080
 const cors = require('cors')
-const {initializeApp, applicationDefault, cert, firebase, database} = require('firebase-admin/app');
+const {initializeApp, applicationDefault, cert,} = require('firebase-admin/app');
 const {getFirestore, Timestamp, FieldValue} = require('firebase-admin/firestore');
 const express = require('express')
-const bodyparser = require('body-parser');
+const bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 const app = express()
 
 
@@ -16,11 +17,12 @@ const firebaseConfig = {
     appId: "1:293598944339:web:cc2aa51bbf2317eb6f3aa6",
     measurementId: "G-H5PG98L421"
 };
-var admin = require("firebase-admin");
+let admin = require("firebase-admin");
 const serviceAccount = require('./fb-clone-8d450-firebase-adminsdk-qzatp-590d6bc3b8.json');
 const {useNavigate} = require("react-router-dom");
 
-admin.initializeApp({
+
+initializeApp({
     credential: admin.credential.cert(serviceAccount)
 
 });
@@ -29,55 +31,55 @@ admin.initializeApp({
 const db = getFirestore();
 
 function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
 
 }
 
-app.use(bodyparser.json())
+app.use(cookieParser());
+
+app.use(bodyParser.json())
 
 app.use(cors())
 
-app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 
-console.log('firestore initiated')
 
 app.get('/', (req, res) => {
+
     res.send('Hello World!')
 })
 
 app.get('/posts', (req, res) => {
-    console.log('here 0')
+
 
     async function getdata() {
-        console.log('here 1')
+
         const snapshot = await db.collection('post').get();
-        console.log('here 2')
+
         let allposts = Array();
-        console.log('here 3')
+
         snapshot.forEach((doc) => {
-            console.log({doc})
             const data_object = {
                 data: doc.data(), id: doc.id
             }
-            console.log(data_object)
             allposts.push(data_object);
         })
-        console.log('here 4')
+
         res.send(JSON.stringify(allposts))
-        console.log(allposts)
+
 
     }
 
     getdata()
 })
 
-app.post('/newpost', (req, res) => {
+app.post('/createpost', (req, res) => {
     const docRef = db.collection('post').doc(makeid(20));
 
     async function retrieve() {
@@ -90,78 +92,71 @@ app.post('/newpost', (req, res) => {
     retrieve()
     res.send(JSON.stringify("post created"))
 })
-app.post('/signup', async (req, res) => {
+app.post('/newuser', async (req, res) => {
 
-        const usersRef = db.collection('users')
-        const id = usersRef.doc(makeid(20));
-        const emailRef = await usersRef.where('email', '==', req.body.email).get();
-        const nameRef = await usersRef.where('name', '==', req.body.name).get();
-        if (!emailRef.empty || !nameRef.empty) {
-            console.log(emailRef, nameRef);
-            res.send(JSON.stringify('user already exists, log in? '))
-        } else {
-            id.set({
-                'name': req.body.name,
-                'email': req.body.email,
-                'password': req.body.password
-            })
-                .then(res.send(JSON.stringify('user created')))
-        }
-
+    const usersRef = db.collection('users')
+    const id = usersRef.doc(makeid(20));
+    const emailRef = await usersRef.where('email', '==', req.body.email).get();
+    const nameRef = await usersRef.where('name', '==', req.body.name).get();
+    if (!emailRef.empty || !nameRef.empty) {
+        console.log(emailRef, nameRef);
+        res.send(JSON.stringify('user already exists, log in? '))
+    } else {
+        id.set({
+            'name': req.body.name, 'email': req.body.email, 'password': req.body.password
+        })
+            .then(res.send(JSON.stringify('user created')))
     }
-)
-app.post('/login', async (req, res) => {
+
+})
+
+function checkLogin(doc, req, res, next) {
+    const password = doc.get("password")
+    console.log('password: ', password)
+    console.log('input: ', req.body.password);
+    if (password === req.body.password) {
+        var cookie = req.cookies.sid
+        console.log(req.cookies.sid);
+        if (cookie === undefined) {
+
+            let sid = makeid(30)
+            const timestamp = Timestamp.fromMillis(Date.now())
+            console.log(sid, ' ', timestamp)
+            const docRef = db.collection('sessions').doc(sid);
+            docRef.set({
+                'userID': doc.id, 'created': timestamp
+            })
+            res.cookie("session_ID", sid, {domain: 'http://127.0.0.1:5173'})
+            // console.log(document.cookie);
+            res.send(JSON.stringify("OK", sid))
+        } else {
+
+            console.log('cookie exists', cookie);
+        }
+        next();
+
+        app.use(express.static(__dirname + '/public'));
+
+    } else {
+        res.send(JSON.stringify("wrong password"));
+    }
+}
+
+app.post('/olduser', async (req, res, next) => {
 
         const usersRef = db.collection('users')
         const nameRef = await usersRef.where('email', '==', req.body.username).get();
         const emailRef = await usersRef.where('name', '==', req.body.username).get();
+
         console.log('request received')
         if (nameRef.empty && emailRef.empty) {
             console.log('no user');
             res.send(JSON.stringify("user does not exist, sign up?"))
         } else {
             if (emailRef.empty) {
-                nameRef.forEach(doc => {
-                    const password = doc.get("password")
-                    console.log('password: ', password)
-                    console.log('input: ', req.body.password);
-                    if (password === req.body.password) {
-
-                        console.log(doc.id, ' ',  Timestamp.fromMillis(Date.now()))
-                        const sessionID = makeid(20)
-                        const docRef = db.collection('sessions').doc(sessionID);
-                        docRef.set({
-                            'userID': doc.id,
-                            'created':   Timestamp.fromMillis(Date.now())
-
-                        })
-                        res.send(JSON.stringify("OK"))
-                        document.cookie = `sessionID=${sessionID};path=/wall;`
-                    } else {
-                        res.send(JSON.stringify("wrong password"));
-                    }
-                })
-
+                nameRef.forEach(doc => checkLogin(doc, req, res, next))
             } else {
-                emailRef.forEach(doc => {
-                    const password = doc.get("password")
-                    console.log('password: ', password)
-                    console.log('input: ', req.body.password)
-                    if (password === req.body.password) {
-                        console.log(doc.id, ' ',  Timestamp.fromMillis(Date.now()))
-                        const sessionID = makeid(20)
-                        const docRef = db.collection('sessions').doc(sessionID);
-                        docRef.set({
-                            'userID': doc.id,
-                            'created':   Timestamp.fromMillis(Date.now())
-
-                        })
-
-                        res.send(JSON.stringify("OK"))
-                    } else {
-                        res.send(JSON.stringify("wrong password"))
-                    }
-                })
+                emailRef.forEach(doc => checkLogin(doc, req, res, next))
             }
 
         }
@@ -197,7 +192,7 @@ app.post('/deletepost', async (req, res) => {
     } else {
         console.log('Document data: ', doc.data());
         console.log(typeof doc.data());
-        const resp = docRef.delete();
+        docRef.delete();
         res.send(JSON.stringify(req.body.id))
 
     }

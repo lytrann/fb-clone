@@ -39,7 +39,7 @@ export default function logIn() {
 
         event.preventDefault();
         console.log({Username, password})
-        const rawResponse = await fetch('http://localhost:8080/login', {
+        const rawResponse = await fetch('http://localhost:8080/olduser', {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -54,6 +54,8 @@ export default function logIn() {
         })
         await console.log(rawResponse);
         const content = await rawResponse.json();
+        const cue = content.search()
+        console.log(cue)
         if (content === 'user does not exist, sign up?') {
             if (confirm(content)) {
                 navigate('/signup')
@@ -61,7 +63,7 @@ export default function logIn() {
                 event.preventDefault()
             }
         } else {
-            if (content === 'OK') {
+            if (cue === 0) {
                 navigate("/wall")
             } else {
                 event.preventDefault()

@@ -12,7 +12,7 @@ import {useState} from "react";
 export default function Post(props) {
 
     const item = props.itemData
-    const allposts = props.allposts
+    const allPosts = props.allPosts
     const [Posts, setPost] = useState(item)
     const [NewLike, setNewLike] = useState(item.data.likeno)
     const Item = styled(Paper)(({theme}) => ({
@@ -80,8 +80,6 @@ export default function Post(props) {
                             <p>{item.data.shareno} shares</p>
                         </Grid>
                     </Grid>
-
-
                     <PostAction itemData={item} SendLikeData={SendLikeData}/>
                 </Item>
             </Stack>

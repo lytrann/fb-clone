@@ -59,7 +59,7 @@ export default function SignUp() {
 
         event.preventDefault();
         console.log({NewEmail, password, NewName})
-        const rawResponse = await fetch('http://localhost:8080/signup', {
+        const rawResponse = await fetch('http://localhost:8080/newuser', {
             method: "POST",
             headers: {
                 'Accept': 'application/json',

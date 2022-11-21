@@ -21,7 +21,7 @@ export default function NewPost() {
 
         console.log('handleSubmit')
         event.preventDefault();
-        const rawResponse = await fetch('http://localhost:8080/newpost', {
+        const rawResponse = await fetch('http://localhost:8080/createpost', {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
