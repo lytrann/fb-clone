@@ -28,10 +28,9 @@ function makeId(length) {
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    return result;
+    return result
 }
 
-app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -362,7 +361,7 @@ app.post('/updatelike', async (req, res) => {
         if (currentTime > expTime) {
             res.send(JSON.stringify('log in first'));
         } else {
-            const userRef = db.collection('users').doc(sessionData.userID).get()
+            const userRef = db.collection('users').doc(sessionData.userID).get();
             const userData = (await userRef).data();
             const userName = userData.name;
             const docRef = db.collection('post').doc(req.body.id);

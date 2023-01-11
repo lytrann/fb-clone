@@ -16,7 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 function main() {
     return (<Router>
         <App>
-
         </App>
     </Router>)
 }
