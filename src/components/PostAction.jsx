@@ -1,52 +1,43 @@
 import * as React from 'react';
-import {styled} from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import {ToggleButton} from "@mui/material";
-import {useState} from "react";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro'
-
+import {useState} from 'react';
+import CommentSection from "./CommentSection.jsx";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
+import ReplyIcon from '@mui/icons-material/Reply';
 
 export const PostAction = (props) => {
-    const Button = styled(Paper)(({theme}) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(1),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    }));
-
-    const item = props.itemData
-    const likedata = props.SendLikeData;
-    const deletedata = props.SendDeleteData;
-
+    const item = props.itemData;
+    const SendLikeData = props.SendLikeData;
+    const LikeText = props.LikeText;
+    const [showComments, setShowComments] = useState(false);
+    const [allCmts, setallCmts] = props.useallCmts;
+    const [CmtCount, setCmtCount] = props.useCmtCount;
 
 
 
     return (
-        <div className="actions">
-
-            <Box sx={{flexGrow: 1}}>
-                <Grid container spacing={3}>
-                    <Grid item onClick={likedata}>
-                        <Button
-                            value="like"
-                            id={item.id + " LikeButton"}
-                        >
-                            Like
-                        </Button>
-                    </Grid>
-                    <Grid item >
-                        <Button id={item.id + " CmtButton"}>Comment </Button>
-                    </Grid>
-                    <Grid item onClick={deletedata}>
-                        <Button id={item.id + " ShareButton"}>Share </Button>
-                    </Grid>
-                </Grid>
-            </Box>
+        <div>
+            <div className="actions flex flex-row justify-evenly my-1">
+                <button value="like" onClick={SendLikeData} style={{'fontWeight': 'bold'}}>
+                    <ThumbUpIcon/>
+                    {' ' + LikeText}
+                </button>
+                <button onClick={() => {setShowComments(!showComments)}} style={{'fontWeight': 'bold'}}><ChatBubbleIcon/> Comment</button>
+                <button id={item.id + " ShareButton"} style={{'fontWeight': 'bold'}}><ReplyIcon/> Share</button>
+            </div>
+              <hr className={'border-slate-400/25 mx-3'}/>
+            {showComments ?
+                <div>
+                    <CommentSection
+                        itemData={item}
+                        useallCmts={[allCmts, setallCmts]}
+                        useCmtCount={[CmtCount, setCmtCount]}
+                    >
+                    </CommentSection>
+                </div>
+                :
+                null
+            }
         </div>
     );
 }

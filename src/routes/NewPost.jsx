@@ -1,62 +1,65 @@
-import React, {useState} from 'react'
-
-import '../App.css'
+import React, {useEffect, useState} from 'react';
+import '../App.css';
 import {containerClasses} from "@mui/material";
-import Container from '@mui/material/Container';
-import {useNavigate, Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import Navigation from "../components/Navigation.jsx";
 
 
 export default function NewPost() {
-
-
+    const [User, setUser] = useState(' ');
     const [NewPost, setNewPost] = useState('');
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (user === null || user === 'guest') {
+            navigate('/login');
+        } else {
+            setUser(user);
+        }
+
+    }, []);
 
     function handleChange(event) {
-        console.log(event.target)
         setNewPost({content: event.target.value});
     }
 
+    const sessionID = localStorage.getItem("sessionID");
+
     async function handleSubmit(event) {
-
-        console.log('handleSubmit')
         event.preventDefault();
-        const rawResponse = await fetch('http://localhost:8080/createpost', {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(NewPost)
-        })
-        await console.log(rawResponse)
+        const rawResponse =
+            await fetch(`http://localhost:8080/createpost?sid=${sessionID}&user=${User}`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(NewPost)
+                });
         const content = await rawResponse.json();
-        console.log('here', content);
-        navigate("/wall");
-
-
+        if (content === 'log in first') {
+            alert(content);
+            await navigate('/login');
+        } else {
+            navigate("/feed");
+        }
     }
 
 
     return (
 
         <div className={containerClasses} style={{margin: '10%'}}>
-            <Container className="heading" style={{flexFlow: 'column wrap'}}>
-                <label className="createpost" style={{alignSelf: 'flex-end'}}>Create post </label><br/>
-                     <Link to="*"> Back to home </Link>
-            </Container>
-
+            <Navigation/>
             <div className="body">
-                <h1 id="username" className="name">Đậu</h1>
+                <p id="username" className="name"/> Hello {User}
                 <form onSubmit={handleSubmit} style={{alignSelf: 'center'}}>
-                    <label>
-                        <input type="text" placeholder="Write something here" name="createpost" className="input"
-                               id="text" onChange={handleChange} style={{backgroundColor: 'none'}}/>
-                    </label>
-                    <Link to ="/wall"  type="submit" value="Submit" className="submit" onClick={handleSubmit}>Submit</Link>
+                    <input type="text" placeholder="Write something here" name="createpost" className="input"
+                           id="text" onChange={handleChange} style={{backgroundColor: 'none'}}/>
+                    <Link to="/feed" type="submit" value="Submit" className="submit"
+                          onClick={handleSubmit}>Submit</Link>
                 </form>
             </div>
         </div>
-
-    )
+    );
 }
