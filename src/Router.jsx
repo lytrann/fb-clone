@@ -41,9 +41,5 @@ export default createBrowserRouter([
     {
         path: '/wall/:user',
         element: <Wall/>
-    },
-    {
-        path: '/test',
-        element: <Test/>
     }
 ])
