@@ -12,7 +12,7 @@ export default function NewPost() {
     useEffect(() => {
         const user = localStorage.getItem("user");
         if (user === null || user === 'guest') {
-            navigate('/login');
+            navigate('*');
         } else {
             setUser(user);
         }
@@ -40,7 +40,7 @@ export default function NewPost() {
         const content = await rawResponse.json();
         if (content === 'log in first') {
             alert(content);
-            await navigate('/login');
+            await navigate('*');
         } else {
             navigate("/feed");
         }

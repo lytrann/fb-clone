@@ -28,9 +28,8 @@ function makeId(length) {
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
-    return result
+    return result;
 }
-
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -280,21 +279,6 @@ app.get('/posts', async (req, res) => {
     await getData();
     await res.send(JSON.stringify(allPosts));
 });
-
-app.post('/createpost', async (req, res) => {
-    const currentTime = Math.floor(Date.now() / 1000);
-    const sessionRef = db.collection('sessions').doc(req.query.sid);
-    const session = await sessionRef.get()
-    if (!session.exists) {
-        res.send(JSON.stringify('log in first'));
-    } else {
-        const sessionData = (await session).data();
-        const expTime = sessionData.expires;
-        if (currentTime > expTime) {
-            res.send(JSON.stringify('log in first'));
-        } else {
-            res.send(JSON.stringify('valid'))
-        }
 
 app.post('/createpost', async (req, res) => {
     const currentTime = Math.floor(Date.now() / 1000);

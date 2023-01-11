@@ -3,23 +3,32 @@ import '../App.css';
 import Post from "../components/Post.jsx";
 import Stack from "@mui/material/Stack";
 import Navigation from "../components/Navigation.jsx";
+import {useNavigate} from "react-router-dom";
 
 
 export default function Feed() {
     const sessionID = localStorage.getItem("sessionID");
     let user = localStorage.getItem("user");
+    const navigate = useNavigate();
     const [Posts, setPosts] = useState([])
     const [profilePic, setProfilePic] = useState('')
 
     useEffect(() => {
-            fetchPost();
+           reRoute()
 
         }
         ,
         []
     );
 
-
+    function reRoute() {
+        if (sessionID === null) {
+            navigate('*')
+        }
+        else {
+            fetchPost();
+        }
+    }
 
     async function fetchPost() {
         const file = await fetch(`http://localhost:8080/posts?sid=${sessionID}`);

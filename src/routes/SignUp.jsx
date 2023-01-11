@@ -68,7 +68,7 @@ export default function SignUp() {
         });
         const content = await rawResponse.json();
         if (confirm(content)) {
-            navigate('/login')
+            navigate('*')
         }
         else {event.preventDefault()}
     }
