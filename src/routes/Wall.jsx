@@ -34,21 +34,21 @@ export default function Wall() {
     const [showEditBio, setShowEditBio] = useState(false);
 
     async function fetchInfo() {
-        const file = await fetch(`http://localhost:8080/profileinfo?user=${username.user}`);
+        const file = await fetch(`http://lytran.deepsel.com/profileinfo?user=${username.user}`);
         const resp = await file.json();
 
         if (resp.profilePic === undefined) {
-            setProfilePic('http://localhost:8080/getpics/defaultprofilepic.png');
+            setProfilePic('http://lytran.deepsel.com/getpics/defaultprofilepic.png');
         } else {
-            setProfilePic(`http://localhost:8080/getpics/${resp.profilePic}`);
+            setProfilePic(`http://lytran.deepsel.com/getpics/${resp.profilePic}`);
             setshowDeleteAva(true);
             setProfilePicName(resp.profilePic);
         }
 
         if (resp.bannerPic === undefined) {
-            setBannerPic('http://localhost:8080/getpics/defaultbannerpic.jpeg');
+            setBannerPic('http://lytran.deepsel.com/getpics/defaultbannerpic.jpeg');
         } else {
-            setBannerPic(`http://localhost:8080/getpics/${resp.bannerPic}`);
+            setBannerPic(`http://lytran.deepsel.com/getpics/${resp.bannerPic}`);
             setshowDeleteBanner(true);
             setBannerPicName(resp.bannerPic);
         }
@@ -63,7 +63,7 @@ export default function Wall() {
     }
 
     async function fetchPosts() {
-        const file = await fetch(`http://localhost:8080/userpost?user=${username.user}`);
+        const file = await fetch(`http://lytran.deepsel.com/userpost?user=${username.user}`);
         const resp = await file.json();
         setUserPost(resp);
     }

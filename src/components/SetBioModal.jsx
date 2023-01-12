@@ -16,7 +16,7 @@ export default function SetBioModal(props) {
     async function handleSubmit(event) {
         event.preventDefault();
         const rawResponse =
-            await fetch(`http://localhost:8080/setbio?sid=${sessionID}`,
+            await fetch(`http://lytran.deepsel.com/setbio?sid=${sessionID}`,
                 {
                     method: "POST",
                     headers: {

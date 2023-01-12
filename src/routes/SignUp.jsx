@@ -51,7 +51,7 @@ export default function SignUp() {
     async function handleSubmit(event) {
         event.preventDefault();
         const rawResponse =
-            await fetch('http://localhost:8080/newuser',
+            await fetch('http://lytran.deepsel.com/newuser',
                 {
             method: "POST",
             headers: {

@@ -55,7 +55,7 @@ export default function Post(props) {
     }
 
     async function fetchComments() {
-        const file = await fetch(`http://localhost:8080/getcmts?postID=${item.id}`);
+        const file = await fetch(`http://lytran.deepsel.com/getcmts?postID=${item.id}`);
         const resp = await file.json();
         console.log('a', resp)
         await setallCmts(resp);
@@ -72,13 +72,13 @@ export default function Post(props) {
     }
 
     async function SetCreatorPic() {
-        const file = await fetch(`http://localhost:8080/profileinfo?user=${item.data.creator}`);
+        const file = await fetch(`http://lytran.deepsel.com/profileinfo?user=${item.data.creator}`);
         const resp = await file.json();
 
         if (resp.profilePic === undefined) {
-            setProfilePic('http://localhost:8080/getpics/defaultprofilepic.png');
+            setProfilePic('http://lytran.deepsel.com/getpics/defaultprofilepic.png');
         } else {
-            setProfilePic(`http://localhost:8080/getpics/${resp.profilePic}`);
+            setProfilePic(`http://lytran.deepsel.com/getpics/${resp.profilePic}`);
         }
     }
 
@@ -90,7 +90,7 @@ export default function Post(props) {
             if (LikeText === 'Like') {
                 item.data.request = "like";
                 const rawResponse =
-                    await fetch(`http://localhost:8080/updatelike?sid=${sessionID}`,
+                    await fetch(`http://lytran.deepsel.com/updatelike?sid=${sessionID}`,
                         {
                             method: "POST",
                             headers: {
@@ -110,7 +110,7 @@ export default function Post(props) {
             } else {
                 item.data.request = "unlike";
                 const rawResponse =
-                    await fetch(`http://localhost:8080/updatelike?sid=${sessionID}`,
+                    await fetch(`http://lytran.deepsel.com/updatelike?sid=${sessionID}`,
                         {
                             method: "POST",
                             headers: {
@@ -145,7 +145,7 @@ export default function Post(props) {
     async function SendDeletePost() {
         item.data.request = "delete";
         const rawResponse =
-            await fetch(`http://localhost:8080/deletepost?sid=${sessionID}&user=${user}`,
+            await fetch(`http://lytran.deepsel.com/deletepost?sid=${sessionID}&user=${user}`,
                 {
                     method: "POST",
                     headers: {

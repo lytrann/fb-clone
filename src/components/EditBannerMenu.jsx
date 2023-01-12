@@ -40,7 +40,7 @@ export default function EditBannerMenu(props) {
         const formData = new FormData();
         formData.append(`${person}-${pictype}`, selectedImage);
         const rawResponse =
-            await fetch(`http://localhost:8080/editpic?type=${pictype}&sid=${sid}`,
+            await fetch(`http://lytran.deepsel.com/editpic?type=${pictype}&sid=${sid}`,
                 {method: "POST", body: formData});
         const response = await rawResponse.json();
         if (response === 'updated') {
@@ -53,7 +53,7 @@ export default function EditBannerMenu(props) {
     async function handleDelete(event) {
         event.preventDefault();
         const rawResponse =
-            await fetch(`http://localhost:8080/deletepic?pic=${BannerPicName}&sid=${sid}`,
+            await fetch(`http://lytran.deepsel.com/deletepic?pic=${BannerPicName}&sid=${sid}`,
                 {method: "POST", body: null});
         const response = await rawResponse.json();
         await console.log(response);
