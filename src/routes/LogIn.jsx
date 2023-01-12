@@ -42,7 +42,7 @@ export default function LogIn() {
     async function handleSubmit(event) {
         event.preventDefault();
         const rawResponse =
-            await fetch('lytran.deepsel.com/olduser',
+            await fetch('http://lytran.deepsel.com/olduser',
                 {
                     method: "POST",
                     headers: {
