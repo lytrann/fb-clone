@@ -68,7 +68,7 @@ export default function CommentSection(props) {
         if (allCmts.length === 0) {
             await setallCmts(resp)
             await setCmtCount(allCmts.length + 1);
-            item.data.cmtNo = item.data.cmtNo + 1;
+            item.data.cmtNo = CmtCount;
         }
         if (resp === 'log in first') {
             alert(resp);

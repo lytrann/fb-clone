@@ -1,7 +1,7 @@
 const port = 8080;
 const cors = require('cors');
 const {initializeApp} = require('firebase-admin/app');
-const {getFirestore, FieldValue, arrayUnion, arrayRemove} = require('firebase-admin/firestore');
+const {getFirestore, FieldValue} = require('firebase-admin/firestore');
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -210,40 +210,38 @@ app.get('/friendlist', async (req, res) => {
         })
     }
 
-    getData();
+    await getData();
 });
 
 app.get('/friendreqlist', async (req, res) => {
-        const allFriends = Array();
+    const allFriends = Array();
 
-        async function getData() {
-            const userRef = await db
+    async function getData() {
+        const userRef = await db
+            .collection('users')
+            .where('name', '==', req.query.user)
+            .get();
+
+        console.log({userRef})
+
+        userRef.forEach(async doc => {
+            const userID = doc.id;
+            const FriendReqRef = await db
                 .collection('users')
-                .where('name', '==', req.query.user)
+                .doc(userID).collection('pendingFriendReq')
                 .get();
 
-            console.log({userRef})
-
-            userRef.forEach(async doc => {
-                const userID = doc.id;
-                const FriendReqRef = await db
-                    .collection('users')
-                    .doc(userID).collection('pendingFriendReq')
-                    .get();
-
-                FriendReqRef.forEach(async doc => {
-                    allFriends.push(doc.id)
-                    console.log('1', allFriends);
-                })
-                console.log('2', allFriends);
-                res.send(JSON.stringify(allFriends));
+            FriendReqRef.forEach(async doc => {
+                allFriends.push(doc.id)
+                console.log('1', allFriends);
             })
-        }
-
-        getData();
+            console.log('2', allFriends);
+            res.send(JSON.stringify(allFriends));
+        })
     }
-)
-;
+
+    getData();
+});
 
 app.get('/posts', async (req, res) => {
     const allPosts = Array();
@@ -280,21 +278,6 @@ app.get('/posts', async (req, res) => {
     await getData();
     await res.send(JSON.stringify(allPosts));
 });
-
-app.post('/createpost', async (req, res) => {
-    const currentTime = Math.floor(Date.now() / 1000);
-    const sessionRef = db.collection('sessions').doc(req.query.sid);
-    const session = await sessionRef.get()
-    if (!session.exists) {
-        res.send(JSON.stringify('log in first'));
-    } else {
-        const sessionData = (await session).data();
-        const expTime = sessionData.expires;
-        if (currentTime > expTime) {
-            res.send(JSON.stringify('log in first'));
-        } else {
-            res.send(JSON.stringify('valid'))
-        }
 
 app.post('/createpost', async (req, res) => {
     const currentTime = Math.floor(Date.now() / 1000);
@@ -380,20 +363,15 @@ app.post('/updatelike', async (req, res) => {
             const userData = (await userRef).data();
             const userName = userData.name;
             const docRef = db.collection('post').doc(req.body.id);
-            let orgLikeCount = req.body.data.likeNo;
             const doc = await docRef.get();
             if (!doc.exists) {
                 res.send(JSON.stringify('cannot find post'));
             } else {
                 if (req.body.data.request === "like") {
-                    const likeCount = orgLikeCount + 1;
-                    console.log('i')
-                    await docRef.update({likeNo: likeCount, likedBy: FieldValue.arrayUnion(userName)});
+                    await docRef.update({likeNo: FieldValue.increment(1), likedBy: FieldValue.arrayUnion(userName)});
                     res.send(JSON.stringify("liked"));
                 } else {
-                    const likeCount = orgLikeCount - 1;
-                    (console.log('ii'))
-                    await docRef.update({likeNo: likeCount, likedBy: FieldValue.arrayRemove(userName)});
+                    await docRef.update({likeNo: FieldValue.increment(-1), likedBy: FieldValue.arrayRemove(userName)});
                     res.send(JSON.stringify("unliked"));
                 }
             }
@@ -451,7 +429,6 @@ app.post("/postcmt", async (req, res) => {
                 const postRef = db.collection('post').doc(postID);
                 const cmt_id = makeId(20);
                 const commentRef = db.collection('comments').doc(cmt_id);
-                let orgCmtCount = req.body.postData.data.cmtNo;
                 const cmt_data = {
                     'content': req.body.cmtData,
                     'commentor': req.query.user,
@@ -459,8 +436,7 @@ app.post("/postcmt", async (req, res) => {
                     'likeNo': 0,
                     'timeStamp': Math.floor(Date.now() / 1000),
                 };
-                const cmtCount = orgCmtCount + 1;
-                await postRef.update({'cmtNo': cmtCount});
+                await postRef.update({'cmtNo': FieldValue.increment(1)});
                 await commentRef.set(cmt_data);
                 res.send(JSON.stringify({'data': cmt_data, 'id': cmt_id}));
             }
@@ -510,11 +486,6 @@ app.post('/deletecmt', async (req, res) => {
                 const accessCmt = cmtRef.data();
                 const commentor = accessCmt.commentor;
                 const postRef = await db.collection('post').doc(accessCmt.postID);
-                const getPost = await postRef.get();
-                const postData = await getPost.data();
-                const orgCmtCount = await postData.cmtNo;
-                const updatedCmtCount = orgCmtCount - 1;
-
                 if (commentor === req.query.user) {
                     const docRef = db.collection('comments').doc(req.body.cmtData.id);
                     const doc = await docRef.get();
@@ -522,9 +493,9 @@ app.post('/deletecmt', async (req, res) => {
                         res.send(JSON.stringify('delete failed'));
                     } else {
                         await docRef.delete();
-                        await postRef.update({cmtNo: updatedCmtCount});
+                        await postRef.update({cmtNo: FieldValue.increment(-1)});
                         res.send(JSON.stringify({
-                            'deleted': true, 'cmtID': req.body.cmtData.id, 'cmtNo': updatedCmtCount
+                            'deleted': true, 'cmtID': req.body.cmtData.id,
                         }));
                     }
                 } else {
