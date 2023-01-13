@@ -13,8 +13,7 @@ export default function Feed() {
     const [Posts, setPosts] = useState([])
 
     useEffect(() => {
-           reRoute()
-
+           reRoute();
         }
         ,
         []

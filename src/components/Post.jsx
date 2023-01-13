@@ -102,6 +102,11 @@ export default function Post(props) {
                     setNewLike(NewLike + 1);
                     item.data.likeNo = item.data.likeNo + 1;
                     setLikeText('Liked');
+                }
+                if (content === 'log in first') {
+                    alert(content);
+                    await clearSession()
+                    await navigate('*')
                 } else {
                     alert(content);
                 }
@@ -210,7 +215,7 @@ export default function Post(props) {
                         key={item.id}
                         SendLikeData={SendLikeData}
                         LikeText={LikeText} useCmtCount={[CmtCount, setCmtCount]}
-                         useallCmts={[allCmts, setallCmts]}
+                        useallCmts={[allCmts, setallCmts]}
 
             />
 
