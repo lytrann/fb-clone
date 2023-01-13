@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import '../App.css';
-import {containerClasses} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -76,7 +75,7 @@ export default function LogIn() {
 
 
     return (
-        <div className={containerClasses} style={{margin: '10%'}}>
+        <div style={{margin: '10%'}}>
 
             <p className={'mx-3'} style={{'fontWeight': 'bolder'}}>Log In </p>
             <hr className={'border-slate-400/25 mx-3'}/>
@@ -96,11 +95,13 @@ export default function LogIn() {
                     <input type={passwordType}
                            onChange={e => setPassword(e.target.value)}
                            required/>
-                    <button className="btn btn-outline-primary" onClick={togglePassword}/>
-                    {passwordType === "password" ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>}
+                    <button className="btn btn-outline-primary" onClick={togglePassword}>
+                        {passwordType === "password" ? <VisibilityOffIcon/> : <RemoveRedEyeIcon/>}
+                    </button>
                     <br/>
                     <br/>
-                    <button type="submit" value="submit" className="submit" style={{'alignSelf': 'center'}}>Log in</button>
+                    <button type="submit" value="submit" className="submit" style={{'alignSelf': 'center'}}>Log in
+                    </button>
                     <br/>
                 </form>
                 <hr className={'border-slate-400/25 mx-3'}/>
