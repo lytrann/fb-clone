@@ -8,7 +8,7 @@ export default function RespFriendReq(props) {
 
     async function sendResp() {
         console.log(event.target)
-        const rawResponse = await fetch(`http://lytran.deepsel.com/respondfriendreq?sid=${sessionID}`,
+        const rawResponse = await fetch(`https://lytran-api.deepsel.com/respondfriendreq?sid=${sessionID}`,
             {
                 method: "POST",
                 headers: {

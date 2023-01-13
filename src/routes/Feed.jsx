@@ -31,7 +31,7 @@ export default function Feed() {
     }
 
     async function fetchPost() {
-        const file = await fetch(`http://lytran.deepsel.com/posts?sid=${sessionID}`);
+        const file = await fetch(`https://lytran-api.deepsel.com/posts?sid=${sessionID}`);
         const resp = await file.json();
         setPosts(resp)
         Posts.sort((a, b) => {

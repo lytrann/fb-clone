@@ -20,7 +20,7 @@ export default function FriendRequestModal(props) {
     );
 
     async function getFriendList() {
-        const file = await fetch(`http://lytran.deepsel.com/friendreqlist?sid=${sessionID}&user=${user}`);
+        const file = await fetch(`https://lytran-api.deepsel.com/friendreqlist?sid=${sessionID}&user=${user}`);
         const resp = await file.json();
         await console.log('friends', resp)
         if (resp.length === 0) {

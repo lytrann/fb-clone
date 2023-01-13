@@ -28,7 +28,7 @@ export default function NewPost() {
     async function handleSubmit(event) {
         event.preventDefault();
         const rawResponse =
-            await fetch(`http://lytran.deepsel.com/createpost?sid=${sessionID}&user=${User}`,
+            await fetch(`https://lytran-api.deepsel.com/createpost?sid=${sessionID}&user=${User}`,
                 {
                     method: "POST",
                     headers: {

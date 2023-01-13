@@ -32,13 +32,13 @@ export default function CommentSection(props) {
     ;
 
     async function SetUserPic() {
-        const file = await fetch(`http://lytran.deepsel.com/profileinfo?user=${localStorage.getItem("user")}`);
+        const file = await fetch(`https://lytran-api.deepsel.com/profileinfo?user=${localStorage.getItem("user")}`);
         const resp = await file.json();
 
         if (resp.profilePic === undefined) {
-            setProfilePic('http://lytran.deepsel.com/getpics/defaultprofilepic.png');
+            setProfilePic('https://lytran-api.deepsel.com/getpics/defaultprofilepic.png');
         } else {
-            setProfilePic(`http://lytran.deepsel.com/getpics/${resp.profilePic}`);
+            setProfilePic(`https://lytran-api.deepsel.com/getpics/${resp.profilePic}`);
         }
     }
 
@@ -51,7 +51,7 @@ export default function CommentSection(props) {
         event.preventDefault();
         console.log(item.data.cmtNo)
         const rawResponse =
-            await fetch(`http://lytran.deepsel.com/postcmt?sid=${sessionID}&user=${user}`,
+            await fetch(`https://lytran-api.deepsel.com/postcmt?sid=${sessionID}&user=${user}`,
                 {
                     method: "POST",
                     headers: {

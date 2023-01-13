@@ -46,7 +46,7 @@ export default function Profile(props) {
     );
 
     async function checkFriend() {
-        const file = await fetch(`http://lytran.deepsel.com/getfriend?sid=${sessionID}&user=${user}`);
+        const file = await fetch(`https://lytran-api.deepsel.com/getfriend?sid=${sessionID}&user=${user}`);
         const resp = await file.json();
         setFriendText(resp)
         if (resp === 'accept/reject request') {
@@ -92,7 +92,7 @@ export default function Profile(props) {
             await navigate('*')
         } else {
             const rawResponse =
-                await fetch(`http://lytran.deepsel.com/respondfriendreq?sid=${sessionID}`,
+                await fetch(`https://lytran-api.deepsel.com/respondfriendreq?sid=${sessionID}`,
                     {
                         method: "POST",
                         headers: {
@@ -126,7 +126,7 @@ export default function Profile(props) {
             await navigate('*')
         } else {
             const rawResponse =
-                await fetch(`http://lytran.deepsel.com/updatefriend?sid=${sessionID}`,
+                await fetch(`https://lytran-api.deepsel.com/updatefriend?sid=${sessionID}`,
                     {
                         method: "POST",
                         headers: {

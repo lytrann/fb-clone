@@ -33,7 +33,7 @@ export default function Comment(props) {
     async function SendDeleteCmt() {
         cmt.data.request = "delete";
         const rawResponse =
-            await fetch(`http://lytran.deepsel.com/deletecmt?sid=${sessionID}&user=${user}`,
+            await fetch(`https://lytran-api.deepsel.com/deletecmt?sid=${sessionID}&user=${user}`,
                 {
                     method: "POST",
                     headers: {
