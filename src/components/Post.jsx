@@ -50,17 +50,15 @@ export default function Post(props) {
         if (likeList.includes(user) === true) {
             setLikeText("Liked");
         } else {
-            null
+
         }
     }
 
     async function fetchComments() {
         const file = await fetch(`https://lytran-api.deepsel.com/getcmts?postID=${item.id}`);
         const resp = await file.json();
-        console.log('a', resp)
         await setallCmts(resp);
-        setCmtCount(resp.length)
-
+        setCmtCount(resp.length);
     }
 
     function DisableDelete() {
@@ -212,6 +210,8 @@ export default function Post(props) {
                         key={item.id}
                         SendLikeData={SendLikeData}
                         LikeText={LikeText} useCmtCount={[CmtCount, setCmtCount]}
+                         useallCmts={[allCmts, setallCmts]}
+
             />
 
         </Item>

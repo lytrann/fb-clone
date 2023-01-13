@@ -65,18 +65,19 @@ export default function CommentSection(props) {
                 });
         const resp = await rawResponse.json();
         setUserCmt('')
-        console.log(allCmts.length)
         if (allCmts.length === 0) {
             await setallCmts(resp)
             await setCmtCount(allCmts.length + 1);
             item.data.cmtNo = item.data.cmtNo + 1;
         }
         if (resp === 'log in first') {
-            alert(content);
+            alert(resp);
             await localStorage.removeItem("sessionID");
             await localStorage.removeItem("user");
             await navigate('*')
         } else {
+            await setCmtCount(allCmts.length + 1)
+            item.data.cmtNo = CmtCount
             await setallCmts([
                 ...allCmts,
                 resp

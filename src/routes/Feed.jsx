@@ -11,7 +11,6 @@ export default function Feed() {
     let user = localStorage.getItem("user");
     const navigate = useNavigate();
     const [Posts, setPosts] = useState([])
-    const [profilePic, setProfilePic] = useState('')
 
     useEffect(() => {
            reRoute()
